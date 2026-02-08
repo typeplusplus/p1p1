@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P1P1 Daily Draft</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Pack One, Pick One</p>
+          <h1>P1P1 Daily Draft</h1>
+          <p class="subtitle">
+            Open a fresh pack, pick your top three, and share your instincts.
+          </p>
+        </div>
+        <div class="hero-meta">
+          <div class="meta-block">
+            <p class="meta-label">Today</p>
+            <p id="today" class="meta-value">—</p>
+          </div>
+          <div class="meta-block">
+            <p class="meta-label">Your Picks</p>
+            <p id="pick-count" class="meta-value">0 / 3</p>
+          </div>
+          <button id="theme-toggle" class="btn ghost">Dark Mode</button>
+        </div>
+      </header>
+
+      <section class="controls">
+        <button id="new-pack" class="btn primary">Open Today’s Pack</button>
+        <button id="share" class="btn ghost" disabled>Share Picks</button>
+        <button id="share-pack" class="btn ghost" disabled>Copy Pack Link</button>
+        <p class="helper">One pack per day. You can reopen to reset today’s pack.</p>
+      </section>
+
+      <section class="filters">
+        <div class="filters-header">
+          <h2>Active Sets</h2>
+          <p class="muted">Pick one or more sets to control what the random pack pulls from.</p>
+        </div>
+        <div class="filters-body">
+          <button id="set-dropdown" class="btn ghost">Choose Sets</button>
+          <div id="set-panel" class="set-panel" hidden>
+            <div class="set-panel-header">
+              <input
+                id="set-search"
+                type="search"
+                placeholder="Search set name or code"
+                autocomplete="off"
+              />
+              <button id="clear-filter" class="btn ghost small">Clear</button>
+            </div>
+            <div id="set-list" class="set-list"></div>
+          </div>
+          <div id="active-sets" class="chip-list"></div>
+          <p id="filter-status" class="helper">Currently: All sets.</p>
+        </div>
+      </section>
+
+      <section class="content">
+        <aside class="picks">
+          <div class="picks-header">
+            <h2>Your Top 3</h2>
+            <p class="muted">Tap cards to rank them. Tap again to unpick.</p>
+          </div>
+          <ol id="picks-list" class="picks-list">
+            <li class="pick empty">Pick 1</li>
+            <li class="pick empty">Pick 2</li>
+            <li class="pick empty">Pick 3</li>
+          </ol>
+        </aside>
+
+        <section class="pack">
+          <div class="pack-header">
+            <h2>Pack</h2>
+            <div id="status" class="status">Ready.</div>
+          </div>
+          <div id="cards" class="card-grid"></div>
+        </section>
+      </section>
+
+      <section class="manual">
+        <div class="manual-header">
+          <h2>Manual Pack</h2>
+          <p class="muted">Paste 15 card names (one per line) to draft the same pack with a pod.</p>
+        </div>
+        <div class="manual-body">
+          <textarea
+            id="manual-input"
+            rows="8"
+            placeholder="Card name line 1&#10;Card name line 2&#10;...&#10;Card name line 15"
+          ></textarea>
+          <div class="manual-actions">
+            <button id="load-manual" class="btn primary">Load Manual Pack</button>
+            <p id="manual-status" class="helper">Ready for a shared pack.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <template id="card-template">
+      <article class="card">
+        <button class="card-btn" type="button">
+          <span class="pick-badge" aria-hidden="true"></span>
+          <img class="card-img" alt="" loading="lazy" />
+          <div class="card-info">
+            <p class="card-name"></p>
+            <p class="card-meta"></p>
+          </div>
+        </button>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>

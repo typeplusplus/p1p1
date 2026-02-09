@@ -37,6 +37,7 @@ body.dark {
 body.dark .hero,
 body.dark .meta-block,
 body.dark .picks,
+body.dark .reasoning,
 body.dark .manual,
 body.dark .filters,
 body.dark .card-btn,
@@ -60,6 +61,7 @@ body.dark .btn.ghost {
 }
 
 body.dark #set-search,
+body.dark #reasoning-input,
 body.dark #manual-input {
   background: rgba(24, 21, 18, 0.95);
   color: #f6f2ea;
@@ -335,6 +337,20 @@ h1 {
   gap: 16px;
 }
 
+.reasoning {
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: 0 20px 40px -30px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reasoning-header h2 {
+  margin: 0 0 6px;
+}
+
 .manual-header h2 {
   margin: 0 0 6px;
 }
@@ -355,6 +371,18 @@ h1 {
   resize: vertical;
   background: rgba(255, 255, 255, 0.9);
   min-height: 140px;
+}
+
+#reasoning-input {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 14px 16px;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 14px;
+  resize: vertical;
+  background: rgba(255, 255, 255, 0.9);
+  min-height: 120px;
 }
 
 .manual-actions {

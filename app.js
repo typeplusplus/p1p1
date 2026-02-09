@@ -15,6 +15,7 @@ const cardTemplate = document.getElementById("card-template");
 const manualInputEl = document.getElementById("manual-input");
 const loadManualBtn = document.getElementById("load-manual");
 const manualStatusEl = document.getElementById("manual-status");
+const reasoningInputEl = document.getElementById("reasoning-input");
 const themeToggleBtn = document.getElementById("theme-toggle");
 const setDropdownBtn = document.getElementById("set-dropdown");
 const setPanelEl = document.getElementById("set-panel");
@@ -29,6 +30,7 @@ const state = {
   cards: [],
   picks: [],
   source: "random",
+  reasoning: "",
   setFilter: [],
   setCatalog: [],
 };
@@ -40,13 +42,15 @@ function init() {
 
   const shared = readSharedPack();
   if (shared) {
-    loadManualPackFromNames(shared.cards, "shared");
+    loadManualPackFromNames(shared.cards, "shared", shared.reasoning);
   } else {
     const stored = loadState();
     if (stored && stored.day === state.day && stored.cards?.length) {
       state.cards = stored.cards;
       state.picks = stored.picks || [];
       state.source = stored.source || "random";
+      state.reasoning = stored.reasoning || "";
+      reasoningInputEl.value = state.reasoning;
       state.setFilter = stored.setFilter || [];
       updateFilterUI();
       render();
@@ -65,6 +69,7 @@ function init() {
   shareBtn.addEventListener("click", sharePicks);
   sharePackBtn.addEventListener("click", sharePackLink);
   loadManualBtn.addEventListener("click", handleManualLoad);
+  reasoningInputEl.addEventListener("input", handleReasoningInput);
   setDropdownBtn.addEventListener("click", toggleSetPanel);
   clearFilterBtn.addEventListener("click", clearFilter);
   setSearchEl.addEventListener("input", () =>
@@ -90,6 +95,8 @@ async function openPack(force = false) {
   state.cards = [];
   state.picks = [];
   state.source = "random";
+  state.reasoning = "";
+  reasoningInputEl.value = "";
   render();
 
   try {
@@ -105,6 +112,8 @@ async function openPack(force = false) {
     state.cards = cards;
     state.picks = [];
     state.source = "random";
+    state.reasoning = "";
+    reasoningInputEl.value = "";
     saveState();
     render();
     setStatus("Pack ready. Make your picks.");
@@ -323,6 +332,7 @@ function sharePackLink() {
   const payload = {
     v: 1,
     cards: state.cards.map((card) => card.name),
+    reasoning: state.reasoning,
   };
   const encoded = base64UrlEncode(JSON.stringify(payload));
   const base = getBaseUrl();
@@ -354,7 +364,7 @@ async function handleManualLoad() {
   await loadManualPackFromNames(names, "manual");
 }
 
-async function loadManualPackFromNames(names, source) {
+async function loadManualPackFromNames(names, source, reasoning = "") {
   newPackBtn.disabled = true;
   loadManualBtn.disabled = true;
   shareBtn.disabled = true;
@@ -362,6 +372,8 @@ async function loadManualPackFromNames(names, source) {
   setStatus("Loading shared pack...");
   state.cards = [];
   state.picks = [];
+  state.reasoning = "";
+  reasoningInputEl.value = "";
   render();
 
   try {
@@ -376,6 +388,8 @@ async function loadManualPackFromNames(names, source) {
     state.cards = cards;
     state.picks = [];
     state.source = source;
+    state.reasoning = reasoning;
+    reasoningInputEl.value = reasoning;
     saveState();
     render();
     setStatus("Manual pack ready. Make your picks.");
@@ -414,9 +428,15 @@ function saveState() {
     cards: state.cards,
     picks: state.picks,
     source: state.source,
+    reasoning: state.reasoning,
     setFilter: state.setFilter,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+}
+
+function handleReasoningInput(event) {
+  state.reasoning = event.target.value;
+  saveState();
 }
 
 function getToday() {
@@ -466,7 +486,10 @@ function readSharedPack() {
     const decoded = base64UrlDecode(code);
     const payload = JSON.parse(decoded);
     if (payload?.v === 1 && Array.isArray(payload.cards)) {
-      return { cards: payload.cards };
+      return {
+        cards: payload.cards,
+        reasoning: typeof payload.reasoning === "string" ? payload.reasoning : "",
+      };
     }
   } catch (error) {
     console.error(error);
